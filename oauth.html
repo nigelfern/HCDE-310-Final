@@ -1,0 +1,42 @@
+<html>
+  <head>
+      <style>
+          body
+          {
+              background-color: #63fca0
+          }
+      </style>
+  <title>Spotify API Rising Stars</title>
+  </head>
+  <body>
+    {% if current_user %}
+      <p>You are logged in as {{ current_user.displayname|escape }}.</p>
+    <h1> Welcome to Rising Star</h1>
+	  {% if artists %}
+      <h2>Your top artists are:</h2>
+	  <ul>
+	  {% for artist in artists %}
+	  <li><a href="{{artist.external_urls.spotify}}">{{artist.name}}</a> Genres: ({% for genre in artist.genres %}{{genre}}, {% endfor %})</li>
+	  {% endfor %}
+  	  </ul>
+	  {% endif %}
+    {% if relatedArtists %}
+    <h2> Your recommended artists are: </h2>
+    <ul>
+    {% for relart in relatedArtists %}
+        {% if relart.popularity|int() < 65 %}
+        <li><a href="{{relart.external_urls.spotify}}">{{relart.name}}</a></li>
+        <iframe src="https://open.spotify.com/follow/1/?uri=spotify:artist:{{relart.id}}&size=detail&theme=light"
+                width="300" height="56" scrolling="no" frameborder="0" style="border:none; overflow:hidden;" allowtransparency="true"></iframe>
+        <br />
+        {% endif %}
+    {% endfor %}
+    </ul>
+    {% endif %}
+      <p><a href="/auth/logout">Log out</a></p>
+    {% else %}
+      <p>You are not yet logged into this site</p>
+      <p><a href="/auth/login">Log in to Spotify</a></p>
+    {% endif %}
+  </body>
+</html>
